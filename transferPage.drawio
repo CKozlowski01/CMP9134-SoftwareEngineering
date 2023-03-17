@@ -1,23 +1,35 @@
 <mxfile host="65bd71144e">
     <diagram id="hO9lWzpSii2Baq0QIzLm" name="Page-1">
-        <mxGraphModel dx="1408" dy="960" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1770" dy="1190" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="6" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="6" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="30" y="20" width="800" height="560" as="geometry"/>
                 </mxCell>
-                <mxCell id="7" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="7" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="30" y="20" width="800" height="110" as="geometry"/>
                 </mxCell>
-                <mxCell id="16" value="&lt;font style=&quot;font-size: 38px;&quot;&gt;Temp Bank Name&lt;/font&gt;&lt;span style=&quot;&quot;&gt;&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                <mxCell id="16" value="&lt;font style=&quot;font-size: 38px;&quot;&gt;Temp Bank Name&lt;/font&gt;&lt;span style=&quot;&quot;&gt;&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="218" y="60" width="415" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="17" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-                    <mxGeometry x="60" y="150" width="80" height="30" as="geometry"/>
+                <mxCell id="17" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="50" y="535" width="80" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="18" value="Back" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-                    <mxGeometry x="70" y="150" width="60" height="30" as="geometry"/>
+                <mxCell id="18" value="Back" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="535" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="List of accounts related to family name" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="70" y="150" width="720" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="Input Amount" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="70" y="340" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="Input Receivers Username" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="440" y="340" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="Transfer" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+                    <mxGeometry x="70" y="440" width="720" height="50" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
