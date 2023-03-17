@@ -1,0 +1,177 @@
+<mxfile host="65bd71144e">
+    <diagram id="TNaoyhZQUGDRgAvL--tZ" name="Page-1">
+        <mxGraphModel dx="1770" dy="1190" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="18" value="Deposit Money" style="shape=module;align=left;spacingLeft=20;align=center;verticalAlign=top;" vertex="1" parent="1">
+                    <mxGeometry x="243" y="60" width="350" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="" style="html=1;rounded=0;flipH=1;flipV=0;" vertex="1" parent="1">
+                    <mxGeometry x="193" y="125" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="21" target="23">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="" style="shape=requiredInterface;html=1;verticalLabelPosition=bottom;sketch=0;" vertex="1" parent="1">
+                    <mxGeometry x="73" y="130" width="10" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="23" target="26">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value=" Add Money to Balance" style="fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="348" y="125" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="Deposit" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="43" y="150" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="Input Value" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="168" y="155" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="26" target="29">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="" style="html=1;rounded=0;flipH=1;flipV=0;" vertex="1" parent="1">
+                    <mxGeometry x="613" y="125" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="Money Taken" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="583" y="150" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="" style="ellipse;fillColor=strokeColor;" vertex="1" parent="1">
+                    <mxGeometry x="733" y="125" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="Balance Changed" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="688" y="155" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="Withdraw Money" style="shape=module;align=left;spacingLeft=20;align=center;verticalAlign=top;" vertex="1" parent="1">
+                    <mxGeometry x="243" y="240" width="350" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="" style="html=1;rounded=0;flipH=1;flipV=0;" vertex="1" parent="1">
+                    <mxGeometry x="193" y="305" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="35" target="37">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="" style="shape=requiredInterface;html=1;verticalLabelPosition=bottom;sketch=0;" vertex="1" parent="1">
+                    <mxGeometry x="73" y="310" width="10" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="37" target="41">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" value=" Take Money From Balance" style="fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="339" y="305" width="172" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="Withdraw" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="38" y="330" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" value="Input Value" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="168" y="335" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="41" target="43">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="" style="html=1;rounded=0;flipH=1;flipV=0;" vertex="1" parent="1">
+                    <mxGeometry x="613" y="305" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="Money Given" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="583" y="330" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" value="" style="ellipse;fillColor=strokeColor;" vertex="1" parent="1">
+                    <mxGeometry x="733" y="305" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="Balance Changed" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="688" y="335" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" value="Transfer Money" style="shape=module;align=left;spacingLeft=20;align=center;verticalAlign=top;" vertex="1" parent="1">
+                    <mxGeometry x="238" y="420" width="350" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="" style="html=1;rounded=0;flipH=1;flipV=0;" vertex="1" parent="1">
+                    <mxGeometry x="188" y="485" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="48" target="50">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" value="" style="shape=requiredInterface;html=1;verticalLabelPosition=bottom;sketch=0;" vertex="1" parent="1">
+                    <mxGeometry x="68" y="490" width="10" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="50" target="54">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" value=" Add Money to Receiver" style="fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="343" y="485" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="Transfer" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="33" y="510" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" value="Input Value" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="163" y="515" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="73" style="edgeStyle=none;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="54" target="71">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="620" y="445"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="74" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="54" target="72">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="623" y="560"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="54" value="" style="html=1;rounded=0;flipH=1;flipV=0;" vertex="1" parent="1">
+                    <mxGeometry x="608" y="485" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="55" value="Money Moved" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="578" y="520" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="58" value="View Account Details" style="shape=module;align=left;spacingLeft=20;align=center;verticalAlign=top;" vertex="1" parent="1">
+                    <mxGeometry x="238" y="600" width="350" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="60" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="61" target="63">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="61" value="" style="shape=requiredInterface;html=1;verticalLabelPosition=bottom;sketch=0;" vertex="1" parent="1">
+                    <mxGeometry x="68" y="670" width="10" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="63" target="67">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="63" value="Find all Account Details" style="fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="334" y="665" width="172" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="64" value="Accounts" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="33" y="690" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="67" target="69">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="67" value="" style="html=1;rounded=0;flipH=1;flipV=0;" vertex="1" parent="1">
+                    <mxGeometry x="608" y="665" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="68" value="Render Infromation" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="558" y="690" width="130" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="69" value="" style="ellipse;fillColor=strokeColor;" vertex="1" parent="1">
+                    <mxGeometry x="728" y="665" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="70" value="Infromation shown" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="683" y="695" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="71" value="" style="ellipse;fillColor=strokeColor;" vertex="1" parent="1">
+                    <mxGeometry x="733" y="430" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="72" value="" style="ellipse;fillColor=strokeColor;" vertex="1" parent="1">
+                    <mxGeometry x="733" y="545" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="75" value="Money removed from sender" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="630" y="455" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="76" value="Money added to receiver" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="660" y="575" width="160" height="30" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
