@@ -1,0 +1,105 @@
+<mxfile host="65bd71144e">
+    <diagram id="dy1ZIlEPAgcs3ACNuQOc" name="Page-1">
+        <mxGraphModel dx="1688" dy="960" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="23" value="" style="edgeStyle=none;html=1;" edge="1" parent="1" source="2" target="12">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="&amp;lt;&amp;lt;device&amp;gt;&amp;gt;&lt;br&gt;&lt;b&gt;ATM&lt;/b&gt;" style="verticalAlign=top;align=center;shape=cube;size=10;direction=south;fontStyle=0;html=1;boundedLbl=1;spacingLeft=5;" vertex="1" parent="1">
+                    <mxGeometry x="30" y="30" width="340" height="270" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="&amp;lt;&amp;lt;executionEnvironment&amp;gt;&amp;gt;&lt;br&gt;&lt;b&gt;ATM Environment&lt;/b&gt;" style="verticalAlign=top;align=center;shape=cube;size=10;direction=south;html=1;boundedLbl=1;spacingLeft=5;" vertex="1" parent="2">
+                    <mxGeometry width="310" height="180" relative="1" as="geometry">
+                        <mxPoint x="10" y="60" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="7" value="&amp;lt;&amp;lt;deployment spec&amp;gt;&amp;gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;config.py&lt;/b&gt;" style="html=1;align=center;verticalAlign=middle;dashed=0;" vertex="1" parent="2">
+                    <mxGeometry x="19.43" y="114.54" width="138.13" height="45.46" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="&amp;lt;&amp;lt;artifact&amp;gt;&amp;gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;bankingApp.py&lt;/b&gt;" style="html=1;align=center;verticalAlign=middle;dashed=0;" vertex="1" parent="2">
+                    <mxGeometry x="174.85" y="169.72" width="116.88" height="50.28" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="&amp;lt;&amp;lt;deploy&amp;gt;&amp;gt;" style="endArrow=open;startArrow=none;endFill=0;startFill=0;endSize=8;html=1;verticalAlign=bottom;dashed=1;labelBackgroundColor=none;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=-0.026;entryY=0.014;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="2" source="7" target="8">
+                    <mxGeometry x="1" y="30" width="160" relative="1" as="geometry">
+                        <mxPoint x="350.625" y="270" as="sourcePoint"/>
+                        <mxPoint x="520.625" y="270" as="targetPoint"/>
+                        <mxPoint x="10" y="14" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="4" value="&amp;lt;&amp;lt;device&amp;gt;&amp;gt;&lt;br&gt;&lt;b&gt;Server&lt;/b&gt;" style="verticalAlign=top;align=center;shape=cube;size=10;direction=south;fontStyle=0;html=1;boundedLbl=1;spacingLeft=5;" vertex="1" parent="1">
+                    <mxGeometry x="470" y="120" width="190" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="&amp;lt;&amp;lt;Database&amp;gt;&amp;gt;&lt;br&gt;&lt;b&gt;MySQL&lt;/b&gt;" style="verticalAlign=top;align=center;shape=cube;size=10;direction=south;html=1;boundedLbl=1;spacingLeft=5;" vertex="1" parent="4">
+                    <mxGeometry width="120" height="80" relative="1" as="geometry">
+                        <mxPoint x="35" y="50" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6" value="&amp;lt;&amp;lt;TCP/IP&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=none;endFill=0;endSize=6;align=left;entryX=0.506;entryY=1.007;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0;exitDx=160;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="2" target="4">
+                    <mxGeometry x="-0.4944" relative="1" as="geometry">
+                        <mxPoint x="350" y="190" as="sourcePoint"/>
+                        <mxPoint x="570" y="209.76" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="11" value="&amp;lt;&amp;lt;device&amp;gt;&amp;gt;&lt;br&gt;&lt;b&gt;Personal Computer&lt;/b&gt;" style="verticalAlign=top;align=center;shape=cube;size=10;direction=south;fontStyle=0;html=1;boundedLbl=1;spacingLeft=5;" vertex="1" parent="1">
+                    <mxGeometry x="30" y="340" width="340" height="270" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="&amp;lt;&amp;lt;executionEnvironment&amp;gt;&amp;gt;&lt;br&gt;&lt;b&gt;Computer Environment&lt;/b&gt;" style="verticalAlign=top;align=center;shape=cube;size=10;direction=south;html=1;boundedLbl=1;spacingLeft=5;" vertex="1" parent="11">
+                    <mxGeometry width="310" height="180" relative="1" as="geometry">
+                        <mxPoint x="10" y="60" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="13" value="&amp;lt;&amp;lt;deployment spec&amp;gt;&amp;gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;config.py&lt;/b&gt;" style="html=1;align=center;verticalAlign=middle;dashed=0;" vertex="1" parent="11">
+                    <mxGeometry x="19.43" y="114.54" width="138.13" height="45.46" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="&amp;lt;&amp;lt;artifact&amp;gt;&amp;gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;bankingApp.py&lt;/b&gt;" style="html=1;align=center;verticalAlign=middle;dashed=0;" vertex="1" parent="11">
+                    <mxGeometry x="174.85" y="169.72" width="116.88" height="50.28" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="&amp;lt;&amp;lt;deploy&amp;gt;&amp;gt;" style="endArrow=open;startArrow=none;endFill=0;startFill=0;endSize=8;html=1;verticalAlign=bottom;dashed=1;labelBackgroundColor=none;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=-0.026;entryY=0.014;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="11" source="13" target="14">
+                    <mxGeometry x="1" y="30" width="160" relative="1" as="geometry">
+                        <mxPoint x="350.625" y="270" as="sourcePoint"/>
+                        <mxPoint x="520.625" y="270" as="targetPoint"/>
+                        <mxPoint x="10" y="14" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="16" value="&amp;lt;&amp;lt;TCP/IP&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=none;endFill=0;endSize=6;align=left;entryX=1;entryY=0.827;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0;exitDx=130;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="11" target="4">
+                    <mxGeometry x="-0.2657" y="-13" relative="1" as="geometry">
+                        <mxPoint x="380" y="200" as="sourcePoint"/>
+                        <mxPoint x="478.6700000000001" y="200.83999999999992" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="17" value="&amp;lt;&amp;lt;device&amp;gt;&amp;gt;&lt;br&gt;&lt;b&gt;Mobile Phone&lt;/b&gt;" style="verticalAlign=top;align=center;shape=cube;size=10;direction=south;fontStyle=0;html=1;boundedLbl=1;spacingLeft=5;" vertex="1" parent="1">
+                    <mxGeometry x="460" y="490" width="340" height="270" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="&amp;lt;&amp;lt;executionEnvironment&amp;gt;&amp;gt;&lt;br&gt;&lt;b&gt;Phone Environment&lt;/b&gt;" style="verticalAlign=top;align=center;shape=cube;size=10;direction=south;html=1;boundedLbl=1;spacingLeft=5;" vertex="1" parent="17">
+                    <mxGeometry width="310" height="180" relative="1" as="geometry">
+                        <mxPoint x="10" y="60" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="19" value="&amp;lt;&amp;lt;deployment spec&amp;gt;&amp;gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;config.py&lt;/b&gt;" style="html=1;align=center;verticalAlign=middle;dashed=0;" vertex="1" parent="17">
+                    <mxGeometry x="19.43" y="114.54" width="138.13" height="45.46" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="&amp;lt;&amp;lt;artifact&amp;gt;&amp;gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;bankingApp.py&lt;/b&gt;" style="html=1;align=center;verticalAlign=middle;dashed=0;" vertex="1" parent="17">
+                    <mxGeometry x="174.85" y="169.72" width="116.88" height="50.28" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="&amp;lt;&amp;lt;deploy&amp;gt;&amp;gt;" style="endArrow=open;startArrow=none;endFill=0;startFill=0;endSize=8;html=1;verticalAlign=bottom;dashed=1;labelBackgroundColor=none;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=-0.026;entryY=0.014;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="17" source="19" target="20">
+                    <mxGeometry x="1" y="30" width="160" relative="1" as="geometry">
+                        <mxPoint x="350.625" y="270" as="sourcePoint"/>
+                        <mxPoint x="520.625" y="270" as="targetPoint"/>
+                        <mxPoint x="10" y="14" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="22" value="&amp;lt;&amp;lt;TCP/IP&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=none;endFill=0;endSize=6;align=left;entryX=1.012;entryY=0.34;entryDx=0;entryDy=0;entryPerimeter=0;exitX=-0.003;exitY=0.536;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="17" target="4">
+                    <mxGeometry x="-0.2657" y="-13" relative="1" as="geometry">
+                        <mxPoint x="380" y="480" as="sourcePoint"/>
+                        <mxPoint x="512.8699999999999" y="270" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
