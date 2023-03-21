@@ -87,7 +87,7 @@ class CreateAnAccount(tk.Frame):
         w.config(justify=CENTER, width=40, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
         w.pack(side ="top", pady=25, padx=(15,0))
 
-        createAnAccountButton = tk.Button(self, text="Create Account", width=20, font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
+        createAnAccountButton = tk.Button(self, text="Create Account", width=20, font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("HomePage"))
         createAnAccountButton.pack(side= "top",pady=(15,0))
 
 
@@ -96,6 +96,21 @@ class HomePage(tk.Frame):
 
     def __init__(self, cont, controller):
         tk.Frame.__init__(self, cont)
+        tk.Frame.__init__(self, cont, bg="white")
+        titleLabel = tk.Label(self, text="Money Safe", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        titleLabel.pack(side="top", fill= "x")
+
+        AccountButton = tk.Button(self, text="Account", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
+        AccountButton.pack(side= "top",padx=(0,700),pady=(100,0))
+
+        DepositButton = tk.Button(self, text="Deposit", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
+        DepositButton.pack(side= "top",padx=(0,700), pady=(100,0))
+
+        WithdrawButton = tk.Button(self, text="Withdraw", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
+        WithdrawButton.pack(side= "top",padx=(0,700), pady=(100,0))
+
+        TransferButton = tk.Button(self, text="Transfer", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
+        TransferButton.pack(side= "top",padx=(0,700), pady=(100,0))
 
 if __name__ == "__main__":
     app = BankingController()
