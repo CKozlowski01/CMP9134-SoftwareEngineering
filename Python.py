@@ -20,7 +20,7 @@ class BankingController(tk.Tk):
         self.frames = {}
 
         #Iterate through all frames
-        for F in (LoginPage, CreateAnAccount, HomePage, DepositPage):
+        for F in (LoginPage, CreateAnAccount, HomePage, DepositPage,WithdrawPage):
             #Find frame name
             page_name = F.__name__
 
@@ -116,7 +116,7 @@ class HomePage(tk.Frame):
         DepositButton = tk.Button(self, text="Deposit", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("DepositPage"))
         DepositButton.pack(side= "top",padx=(0,700), pady=(100,0))
 
-        WithdrawButton = tk.Button(self, text="Withdraw", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
+        WithdrawButton = tk.Button(self, text="Withdraw", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("WithdrawPage"))
         WithdrawButton.pack(side= "top",padx=(0,700), pady=(100,0))
 
         TransferButton = tk.Button(self, text="Transfer", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
@@ -136,8 +136,22 @@ class DepositPage(tk.Frame):
         depositTextbox = tk.Entry(self, justify=CENTER, width=60, font=("Times New Roman",24),
                                   borderwidth=3, relief="solid",bg="#016846", fg="white", validate="key", validatecommand=vcmd)    
         depositTextbox.pack(side="top", pady=(100,0))
-        depositButton = tk.Button(self, text="Deposit Amouunt", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
+        depositButton = tk.Button(self, text="Deposit Amount", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
         depositButton.pack(side= "top", pady=(50,0))
+
+class WithdrawPage(tk.Frame):
+
+    def __init__(self, cont, controller):        
+        tk.Frame.__init__(self, cont, bg="white")
+        titleLabel = tk.Label(self, text="Money Safe", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        titleLabel.pack(side="top", fill= "x")
+
+        vcmd = (self.register(controller.validateEntry),'%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
+        withdrawTextbox = tk.Entry(self, justify=CENTER, width=60, font=("Times New Roman",24),
+                                  borderwidth=3, relief="solid",bg="#016846", fg="white", validate="key", validatecommand=vcmd)    
+        withdrawTextbox.pack(side="top", pady=(100,0))
+        withdrawButton = tk.Button(self, text="Withdraw Amount", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
+        withdrawButton.pack(side= "top", pady=(50,0))
 
 
     
