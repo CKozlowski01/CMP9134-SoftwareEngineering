@@ -20,7 +20,7 @@ class BankingController(tk.Tk):
         self.frames = {}
 
         #Iterate through all frames
-        for F in (LoginPage, CreateAnAccount, HomePage):
+        for F in (LoginPage, CreateAnAccount, HomePage, DepositPage):
             #Find frame name
             page_name = F.__name__
 
@@ -40,6 +40,17 @@ class BankingController(tk.Tk):
     def show_frame(self, frame):
         frameobj = self.frames[frame]
         frameobj.tkraise()
+
+    def validateEntry(self, action, index, value_if_allowed,
+                       prior_value, text, validation_type, trigger_type, widget_name):
+        if text:            
+            try:
+                if text == "." or float(text):
+                    return True
+            except ValueError:
+                return False
+        else:
+            return False
 
 
 class LoginPage(tk.Frame):
@@ -94,23 +105,42 @@ class CreateAnAccount(tk.Frame):
 
 class HomePage(tk.Frame):
 
-    def __init__(self, cont, controller):
-        tk.Frame.__init__(self, cont)
+    def __init__(self, cont, controller):        
         tk.Frame.__init__(self, cont, bg="white")
         titleLabel = tk.Label(self, text="Money Safe", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
         titleLabel.pack(side="top", fill= "x")
 
         AccountButton = tk.Button(self, text="Account", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
-        AccountButton.pack(side= "top",padx=(0,700),pady=(100,0))
+        AccountButton.pack(side= "top",padx=(0,700),pady=(75,0))
 
-        DepositButton = tk.Button(self, text="Deposit", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
+        DepositButton = tk.Button(self, text="Deposit", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("DepositPage"))
         DepositButton.pack(side= "top",padx=(0,700), pady=(100,0))
 
         WithdrawButton = tk.Button(self, text="Withdraw", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
         WithdrawButton.pack(side= "top",padx=(0,700), pady=(100,0))
 
         TransferButton = tk.Button(self, text="Transfer", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
-        TransferButton.pack(side= "top",padx=(0,700), pady=(100,0))
+        TransferButton.pack(side= "left",padx=(200,0), pady=(50,0))
+
+        backButton = tk.Button(self, text="Back", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
+        backButton.pack(side= "left",padx=(350,0), pady=(50,0))
+
+class DepositPage(tk.Frame):
+
+    def __init__(self, cont, controller):        
+        tk.Frame.__init__(self, cont, bg="white")
+        titleLabel = tk.Label(self, text="Money Safe", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        titleLabel.pack(side="top", fill= "x")
+
+        vcmd = (self.register(controller.validateEntry),'%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
+        depositTextbox = tk.Entry(self, justify=CENTER, width=60, font=("Times New Roman",24),
+                                  borderwidth=3, relief="solid",bg="#016846", fg="white", validate="key", validatecommand=vcmd)    
+        depositTextbox.pack(side="top", pady=(100,0))
+        depositButton = tk.Button(self, text="Deposit Amouunt", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
+        depositButton.pack(side= "top", pady=(50,0))
+
+
+    
 
 if __name__ == "__main__":
     app = BankingController()
