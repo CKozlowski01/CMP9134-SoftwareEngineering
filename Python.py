@@ -57,7 +57,7 @@ class LoginPage(tk.Frame):
         passwordTextbox.insert(INSERT, "Password")
         passwordTextbox.pack(side="top")
 
-        createAnAccountButton = tk.Button(self, text="Create Account", width=20, font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846")
+        createAnAccountButton = tk.Button(self, text="Create Account", width=20, font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846", command=lambda:controller.show_frame("CreateAnAccount"))
         createAnAccountButton.pack(side= LEFT,padx= (500,0),pady=(10,350))
 
         LoginButton = tk.Button(self, text="Login", width=20,font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846")
@@ -67,7 +67,29 @@ class LoginPage(tk.Frame):
 class CreateAnAccount(tk.Frame):
 
     def __init__(self, cont, controller):
-        tk.Frame.__init__(self, cont)
+        tk.Frame.__init__(self, cont, bg="white")
+        titleLabel = tk.Label(self, text="Money Safe", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        titleLabel.pack(side="top", fill= "x")
+
+        usernameTextbox = tk.Entry(self, justify=CENTER, width=60, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        usernameTextbox.insert(INSERT, "Username")
+        usernameTextbox.pack(side="top", pady=(250,25))
+
+        passwordTextbox = tk.Entry(self, justify=CENTER, width=60, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        passwordTextbox.insert(INSERT, "Password")
+        passwordTextbox.pack(side="top")
+
+        OPTIONS=["Personal","Business"]
+        variable = StringVar(self)
+        variable.set(OPTIONS[0]) # default value
+
+        w = OptionMenu(self, variable, *OPTIONS)
+        w.config(justify=CENTER, width=40, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        w.pack(side ="top", pady=25, padx=(15,0))
+
+        createAnAccountButton = tk.Button(self, text="Create Account", width=20, font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
+        createAnAccountButton.pack(side= "top",pady=(15,0))
+
 
 
 class HomePage(tk.Frame):
