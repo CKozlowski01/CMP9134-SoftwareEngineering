@@ -2,13 +2,23 @@ from textwrap import fill
 import tkinter as tk
 from tkinter import font as tkfont
 from tkinter import *
-
+import sqlite3
+from tkinter import messagebox
 class BankingController(tk.Tk):
 
     def __init__(self):
         super().__init__()      
         self.geometry("1600x1000")
         self.resizable(False, False)
+
+        conn = sqlite3.connect("bankingAccounts.db")
+        c = conn.cursor()
+        c.execute("CREATE TABLE IF NOT EXISTS bankingInfo (userName text, password text, accountType text, balance real)")
+        c.execute("SELECT *,oid FROM bankingInfo")
+        records =c.fetchall()
+        print(records)
+        conn.commit()
+        conn.close()
 
         #Create the Container
         container = tk.Frame(self)
@@ -52,6 +62,8 @@ class BankingController(tk.Tk):
         else:
             return False
 
+ 
+
 
 class LoginPage(tk.Frame):
 
@@ -83,11 +95,11 @@ class CreateAnAccount(tk.Frame):
         titleLabel.pack(side="top", fill= "x")
 
         usernameTextbox = tk.Entry(self, justify=CENTER, width=60, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
-        usernameTextbox.insert(INSERT, "Username")
+        #usernameTextbox.insert(INSERT, "Username")
         usernameTextbox.pack(side="top", pady=(250,25))
 
         passwordTextbox = tk.Entry(self, justify=CENTER, width=60, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
-        passwordTextbox.insert(INSERT, "Password")
+        #passwordTextbox.insert(INSERT, "Password")
         passwordTextbox.pack(side="top")
 
         OPTIONS=["Personal","Business"]
@@ -98,8 +110,40 @@ class CreateAnAccount(tk.Frame):
         w.config(justify=CENTER, width=40, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
         w.pack(side ="top", pady=25, padx=(15,0))
 
-        createAnAccountButton = tk.Button(self, text="Create Account", width=20, font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("HomePage"))
+        createAnAccountButton = tk.Button(self, text="Create Account", width=20, font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:self.dbCreateAccount(usernameTextbox.get(),passwordTextbox.get(),variable.get()))
         createAnAccountButton.pack(side= "top",pady=(15,0))
+
+    def dbCreateAccount (self, userN, passwrd, accType):
+        if(self.validInfo(userN, passwrd)):
+            conn = sqlite3.connect("bankingAccounts.db")
+            c = conn.cursor()
+            c.execute("INSERT INTO bankingInfo VALUES (:userN, :passwrd, :accType, :bal)",
+                        {
+                            'userN': userN,
+                            'passwrd': passwrd,
+                            'accType': accType,
+                            'bal':0                     
+                        })
+            conn.commit()
+            conn.close()
+
+    def validInfo(self, userN, passwrd):
+        if(userN == "" or passwrd == ""):
+            messagebox.showinfo(title="Error", message="Please fill all fields")
+            return False
+        conn = sqlite3.connect("bankingAccounts.db")
+        c = conn.cursor()
+        c.execute("SELECT *,oid FROM bankingInfo")
+        records =c.fetchall()
+        for record in records:
+            if (userN == str(record[0])):
+                conn.commit()
+                conn.close()
+                messagebox.showinfo(title="Error", message="Please try a different UserName")
+                return False
+        conn.commit()
+        conn.close()       
+        return True
 
 
 
