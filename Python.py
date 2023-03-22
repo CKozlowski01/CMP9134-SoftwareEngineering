@@ -1,15 +1,19 @@
+from ast import Lambda
 from textwrap import fill
 import tkinter as tk
 from tkinter import font as tkfont
 from tkinter import *
 import sqlite3
 from tkinter import messagebox
+
 class BankingController(tk.Tk):
 
     def __init__(self):
         super().__init__()      
         self.geometry("1600x1000")
         self.resizable(False, False)
+
+        uniqueID = 0
 
         conn = sqlite3.connect("bankingAccounts.db")
         c = conn.cursor()
@@ -62,9 +66,60 @@ class BankingController(tk.Tk):
         else:
             return False
 
+    def validInfo(self, userN, passwrd):
+        if(userN == "" or passwrd == ""):
+            messagebox.showinfo(title="Error", message="Please fill all fields")
+            return False
+        conn = sqlite3.connect("bankingAccounts.db")
+        c = conn.cursor()
+        c.execute("SELECT *,oid FROM bankingInfo")
+        records =c.fetchall()
+        for record in records:
+            if (userN == str(record[0])):
+                conn.commit()
+                conn.close()
+                messagebox.showinfo(title="Error", message="Please try a different UserName")
+                return False
+        conn.commit()
+        conn.close()       
+        return True
+
+    def dbCreateAccount (self, userN, passwrd, accType):
+        if(self.validInfo(userN, passwrd)):
+            conn = sqlite3.connect("bankingAccounts.db")
+            c = conn.cursor()
+            c.execute("INSERT INTO bankingInfo VALUES (:userN, :passwrd, :accType, :bal)",
+                        {
+                            'userN': userN,
+                            'passwrd': passwrd,
+                            'accType': accType,
+                            'bal':0                     
+                        })           
+            conn.commit()
+
+            c.execute("SELECT oid FROM bankingInfo WHERE userName =?", (userN,))
+            records =c.fetchall()
+            print(records[0])
+            conn.close()
+            self.show_frame("HomePage")
+
+    def loginCredentials(self, userN, passwrd):
+        conn = sqlite3.connect("bankingAccounts.db")
+        c = conn.cursor()
+        c.execute("SELECT oid FROM bankingInfo WHERE userName = ? AND password=? ", (userN, passwrd))
+        records =c.fetchall()
+        print(records)
+        if (len(records) == 0):
+            conn.close()
+            return False
+        conn.close()
+        return True
+
+    def dbLogin (self, userN, passwrd):
+        if(self.loginCredentials(userN, passwrd)):
+            print(userN, passwrd)
+            self.show_frame("HomePage")
  
-
-
 class LoginPage(tk.Frame):
 
     def __init__(self, cont, controller):
@@ -83,7 +138,7 @@ class LoginPage(tk.Frame):
         createAnAccountButton = tk.Button(self, text="Create Account", width=20, font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846", command=lambda:controller.show_frame("CreateAnAccount"))
         createAnAccountButton.pack(side= LEFT,padx= (500,0),pady=(10,350))
 
-        LoginButton = tk.Button(self, text="Login", width=20,font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846")
+        LoginButton = tk.Button(self, text="Login", width=20,font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846", command=lambda:controller.dbLogin(usernameTextbox.get(),passwordTextbox.get()))
         LoginButton.pack(side = RIGHT,padx=(0,500),pady=(10,350))
         
 
@@ -110,42 +165,8 @@ class CreateAnAccount(tk.Frame):
         w.config(justify=CENTER, width=40, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
         w.pack(side ="top", pady=25, padx=(15,0))
 
-        createAnAccountButton = tk.Button(self, text="Create Account", width=20, font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:self.dbCreateAccount(usernameTextbox.get(),passwordTextbox.get(),variable.get()))
+        createAnAccountButton = tk.Button(self, text="Create Account", width=20, font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.dbCreateAccount(usernameTextbox.get(),passwordTextbox.get(),variable.get()))
         createAnAccountButton.pack(side= "top",pady=(15,0))
-
-    def dbCreateAccount (self, userN, passwrd, accType):
-        if(self.validInfo(userN, passwrd)):
-            conn = sqlite3.connect("bankingAccounts.db")
-            c = conn.cursor()
-            c.execute("INSERT INTO bankingInfo VALUES (:userN, :passwrd, :accType, :bal)",
-                        {
-                            'userN': userN,
-                            'passwrd': passwrd,
-                            'accType': accType,
-                            'bal':0                     
-                        })
-            conn.commit()
-            conn.close()
-
-    def validInfo(self, userN, passwrd):
-        if(userN == "" or passwrd == ""):
-            messagebox.showinfo(title="Error", message="Please fill all fields")
-            return False
-        conn = sqlite3.connect("bankingAccounts.db")
-        c = conn.cursor()
-        c.execute("SELECT *,oid FROM bankingInfo")
-        records =c.fetchall()
-        for record in records:
-            if (userN == str(record[0])):
-                conn.commit()
-                conn.close()
-                messagebox.showinfo(title="Error", message="Please try a different UserName")
-                return False
-        conn.commit()
-        conn.close()       
-        return True
-
-
 
 class HomePage(tk.Frame):
 
