@@ -1,7 +1,10 @@
+from ast import Lambda
 from textwrap import fill
 import tkinter as tk
 from tkinter import font as tkfont
 from tkinter import *
+import sqlite3
+from tkinter import messagebox
 
 class BankingController(tk.Tk):
 
@@ -9,6 +12,17 @@ class BankingController(tk.Tk):
         super().__init__()      
         self.geometry("1600x1000")
         self.resizable(False, False)
+
+        uniqueID = 0
+
+        conn = sqlite3.connect("bankingAccounts.db")
+        c = conn.cursor()
+        c.execute("CREATE TABLE IF NOT EXISTS bankingInfo (userName text, password text, accountType text, balance real)")
+        c.execute("SELECT *,oid FROM bankingInfo")
+        records =c.fetchall()
+        print(records)
+        conn.commit()
+        conn.close()
 
         #Create the Container
         container = tk.Frame(self)
@@ -20,7 +34,9 @@ class BankingController(tk.Tk):
         self.frames = {}
 
         #Iterate through all frames
-        for F in (LoginPage, CreateAnAccount, HomePage, TransferPage, AccountDetails):
+
+        for F in (LoginPage, CreateAnAccount, HomePage, DepositPage, WithdrawPage, TransferPage, AccountDetails):
+
             #Find frame name
             page_name = F.__name__
 
@@ -41,7 +57,71 @@ class BankingController(tk.Tk):
         frameobj = self.frames[frame]
         frameobj.tkraise()
 
+    def validateEntry(self, action, index, value_if_allowed,
+                       prior_value, text, validation_type, trigger_type, widget_name):
+        if text:            
+            try:
+                if text == "." or float(text):
+                    return True
+            except ValueError:
+                return False
+        else:
+            return False
 
+    def validInfo(self, userN, passwrd):
+        if(userN == "" or passwrd == ""):
+            messagebox.showinfo(title="Error", message="Please fill all fields")
+            return False
+        conn = sqlite3.connect("bankingAccounts.db")
+        c = conn.cursor()
+        c.execute("SELECT *,oid FROM bankingInfo")
+        records =c.fetchall()
+        for record in records:
+            if (userN == str(record[0])):
+                conn.commit()
+                conn.close()
+                messagebox.showinfo(title="Error", message="Please try a different UserName")
+                return False
+        conn.commit()
+        conn.close()       
+        return True
+
+    def dbCreateAccount (self, userN, passwrd, accType):
+        if(self.validInfo(userN, passwrd)):
+            conn = sqlite3.connect("bankingAccounts.db")
+            c = conn.cursor()
+            c.execute("INSERT INTO bankingInfo VALUES (:userN, :passwrd, :accType, :bal)",
+                        {
+                            'userN': userN,
+                            'passwrd': passwrd,
+                            'accType': accType,
+                            'bal':0                     
+                        })           
+            conn.commit()
+
+            c.execute("SELECT oid FROM bankingInfo WHERE userName =?", (userN,))
+            records =c.fetchall()
+            print(records[0])
+            conn.close()
+            self.show_frame("HomePage")
+
+    def loginCredentials(self, userN, passwrd):
+        conn = sqlite3.connect("bankingAccounts.db")
+        c = conn.cursor()
+        c.execute("SELECT oid FROM bankingInfo WHERE userName = ? AND password=? ", (userN, passwrd))
+        records =c.fetchall()
+        print(records)
+        if (len(records) == 0):
+            conn.close()
+            return False
+        conn.close()
+        return True
+
+    def dbLogin (self, userN, passwrd):
+        if(self.loginCredentials(userN, passwrd)):
+            print(userN, passwrd)
+            self.show_frame("HomePage")
+ 
 class LoginPage(tk.Frame):
 
     def __init__(self, cont, controller):
@@ -57,23 +137,92 @@ class LoginPage(tk.Frame):
         passwordTextbox.insert(INSERT, "Password")
         passwordTextbox.pack(side="top")
 
-        createAnAccountButton = tk.Button(self, text="Create Account", width=20, font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846")
+        createAnAccountButton = tk.Button(self, text="Create Account", width=20, font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846", command=lambda:controller.show_frame("CreateAnAccount"))
         createAnAccountButton.pack(side= LEFT,padx= (500,0),pady=(10,350))
+        
+        LoginButton = tk.Button(self, text="Login", width=20,font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846", command=lambda:controller.dbLogin(usernameTextbox.get(),passwordTextbox.get()))
 
-        LoginButton = tk.Button(self, text="Login", width=20,font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846", command=lambda:controller.show_frame("AccountDetails"))
         LoginButton.pack(side = RIGHT,padx=(0,500),pady=(10,350))
         
 
 class CreateAnAccount(tk.Frame):
 
     def __init__(self, cont, controller):
-        tk.Frame.__init__(self, cont)
+        tk.Frame.__init__(self, cont, bg="white")
+        titleLabel = tk.Label(self, text="Money Safe", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        titleLabel.pack(side="top", fill= "x")
 
+        usernameTextbox = tk.Entry(self, justify=CENTER, width=60, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        #usernameTextbox.insert(INSERT, "Username")
+        usernameTextbox.pack(side="top", pady=(250,25))
+
+        passwordTextbox = tk.Entry(self, justify=CENTER, width=60, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        #passwordTextbox.insert(INSERT, "Password")
+        passwordTextbox.pack(side="top")
+
+        OPTIONS=["Personal","Business"]
+        variable = StringVar(self)
+        variable.set(OPTIONS[0]) # default value
+
+        w = OptionMenu(self, variable, *OPTIONS)
+        w.config(justify=CENTER, width=40, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        w.pack(side ="top", pady=25, padx=(15,0))
+
+        createAnAccountButton = tk.Button(self, text="Create Account", width=20, font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.dbCreateAccount(usernameTextbox.get(),passwordTextbox.get(),variable.get()))
+        createAnAccountButton.pack(side= "top",pady=(15,0))
 
 class HomePage(tk.Frame):
 
-    def __init__(self, cont, controller):
-        tk.Frame.__init__(self, cont)
+    def __init__(self, cont, controller):        
+        tk.Frame.__init__(self, cont, bg="white")
+        titleLabel = tk.Label(self, text="Money Safe", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        titleLabel.pack(side="top", fill= "x")
+
+        AccountButton = tk.Button(self, text="Account", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
+        AccountButton.pack(side= "top",padx=(0,700),pady=(75,0))
+
+        DepositButton = tk.Button(self, text="Deposit", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("DepositPage"))
+        DepositButton.pack(side= "top",padx=(0,700), pady=(100,0))
+
+        WithdrawButton = tk.Button(self, text="Withdraw", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("WithdrawPage"))
+        WithdrawButton.pack(side= "top",padx=(0,700), pady=(100,0))
+
+        TransferButton = tk.Button(self, text="Transfer", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
+        TransferButton.pack(side= "left",padx=(200,0), pady=(50,0))
+
+        backButton = tk.Button(self, text="Back", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
+        backButton.pack(side= "left",padx=(350,0), pady=(50,0))
+
+class DepositPage(tk.Frame):
+
+    def __init__(self, cont, controller):        
+        tk.Frame.__init__(self, cont, bg="white")
+        titleLabel = tk.Label(self, text="Money Safe", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        titleLabel.pack(side="top", fill= "x")
+
+        vcmd = (self.register(controller.validateEntry),'%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
+        depositTextbox = tk.Entry(self, justify=CENTER, width=60, font=("Times New Roman",24),
+                                  borderwidth=3, relief="solid",bg="#016846", fg="white", validate="key", validatecommand=vcmd)    
+        depositTextbox.pack(side="top", pady=(100,0))
+        depositButton = tk.Button(self, text="Deposit Amount", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
+        depositButton.pack(side= "top", pady=(50,0))
+
+class WithdrawPage(tk.Frame):
+
+    def __init__(self, cont, controller):        
+        tk.Frame.__init__(self, cont, bg="white")
+        titleLabel = tk.Label(self, text="Money Safe", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        titleLabel.pack(side="top", fill= "x")
+
+        vcmd = (self.register(controller.validateEntry),'%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
+        withdrawTextbox = tk.Entry(self, justify=CENTER, width=60, font=("Times New Roman",24),
+                                  borderwidth=3, relief="solid",bg="#016846", fg="white", validate="key", validatecommand=vcmd)    
+        withdrawTextbox.pack(side="top", pady=(100,0))
+        withdrawButton = tk.Button(self, text="Withdraw Amount", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
+        withdrawButton.pack(side= "top", pady=(50,0))
+
+
+    
 
 class TransferPage(tk.Frame):
 
