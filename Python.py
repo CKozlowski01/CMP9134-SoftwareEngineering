@@ -13,7 +13,9 @@ class BankingController(tk.Tk):
         self.geometry("1600x1000")
         self.resizable(False, False)
 
-        uniqueID = 0
+        self.uniqueID = 0
+        self.currentUserName=""
+        self.accountList = [""]
 
         conn = sqlite3.connect("bankingAccounts.db")
         c = conn.cursor()
@@ -25,23 +27,23 @@ class BankingController(tk.Tk):
         conn.close()
 
         #Create the Container
-        container = tk.Frame(self)
-        container.pack(side="top", fill="both", expand=True)
-        container.grid_rowconfigure(0, weight=1)
-        container.grid_columnconfigure(0, weight=1)
+        self.container = tk.Frame(self)
+        self.container.pack(side="top", fill="both", expand=True)
+        self.container.grid_rowconfigure(0, weight=1)
+        self.container.grid_columnconfigure(0, weight=1)
 
         #Empty dictionary to hold all frame and frame object pairings
         self.frames = {}
 
         #Iterate through all frames
 
-        for F in (LoginPage, CreateAnAccount, HomePage, DepositPage, WithdrawPage, TransferPage, AccountDetails):
+        for F in (LoginPage, CreateAnAccount, HomePage):
 
             #Find frame name
             page_name = F.__name__
 
             #Fulfil frame arguments with the container above and the pass this class so frames can use defining functions
-            frame = F(cont=container, controller=self)
+            frame = F(cont=self.container, controller=self)
 
             #Add to the dictionary
             self.frames[page_name] = frame
@@ -53,8 +55,22 @@ class BankingController(tk.Tk):
         self.show_frame("LoginPage")
 
     #Function to change frame
-    def show_frame(self, frame):
-        frameobj = self.frames[frame]
+    def show_frame(self, f):
+        if (f == "HomePage"):
+            self.populateTransferOption()
+            for F in (DepositPage, WithdrawPage, TransferPage, AccountDetails):
+                #Find frame name
+                page_name = F.__name__
+
+                #Fulfil frame arguments with the container above and the pass this class so frames can use defining functions
+                frame = F(cont=self.container, controller=self)
+
+                #Add to the dictionary
+                self.frames[page_name] = frame
+
+                #Stack all frames in the same position, the last stacked will appear at the top unless changed
+                frame.grid(row=0, column=0, sticky="nsew")
+        frameobj = self.frames[f]
         frameobj.tkraise()
 
     def validateEntry(self, action, index, value_if_allowed,
@@ -99,28 +115,45 @@ class BankingController(tk.Tk):
                         })           
             conn.commit()
 
-            c.execute("SELECT oid FROM bankingInfo WHERE userName =?", (userN,))
+            c.execute("SELECT *,oid FROM bankingInfo WHERE userName =?", (userN,))
             records =c.fetchall()
-            print(records[0])
+            record = records[0]
+            self.uniqueID = record[4]
+            self.currentUserName = record[0]
+            print(self.currentUserName, self.uniqueID)
             conn.close()
             self.show_frame("HomePage")
 
     def loginCredentials(self, userN, passwrd):
         conn = sqlite3.connect("bankingAccounts.db")
         c = conn.cursor()
-        c.execute("SELECT oid FROM bankingInfo WHERE userName = ? AND password=? ", (userN, passwrd))
+        c.execute("SELECT *,oid FROM bankingInfo WHERE userName = ? AND password=? ", (userN, passwrd))
         records =c.fetchall()
-        print(records)
+        
         if (len(records) == 0):
             conn.close()
             return False
+        record = records[0]
+        self.uniqueID = record[4]
+        self.currentUserName = record[0]        
         conn.close()
         return True
 
     def dbLogin (self, userN, passwrd):
-        if(self.loginCredentials(userN, passwrd)):
-            print(userN, passwrd)
+        if(self.loginCredentials(userN, passwrd)):           
             self.show_frame("HomePage")
+
+    def populateTransferOption (self):       
+        conn = sqlite3.connect("bankingAccounts.db")
+        c = conn.cursor()
+        c.execute("SELECT *,oid FROM bankingInfo WHERE userName = ?", (self.currentUserName,))
+        records =c.fetchall()
+        for record in records:
+            data = "%s %s %s %s %s" % (record[0], record[1],record[2],record[3],record[4])
+            self.accountList.append(data)
+            print("2")
+        print(self.accountList)
+            
  
 class LoginPage(tk.Frame):
 
@@ -187,7 +220,7 @@ class HomePage(tk.Frame):
         WithdrawButton = tk.Button(self, text="Withdraw", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("WithdrawPage"))
         WithdrawButton.pack(side= "top",padx=(0,700), pady=(100,0))
 
-        TransferButton = tk.Button(self, text="Transfer", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
+        TransferButton = tk.Button(self, text="Transfer", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("TransferPage"))
         TransferButton.pack(side= "left",padx=(200,0), pady=(50,0))
 
         backButton = tk.Button(self, text="Back", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
@@ -231,10 +264,12 @@ class TransferPage(tk.Frame):
         titleLabel = tk.Label(self, text="Money Safe", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
         titleLabel.pack(side="top", fill="x")
 
-        accountList = ("option 1", "option 2", "option 3")
+
+        #accountList = ("option 1", "option 2", "option 3")
         self.v = tk.StringVar()
-        self.v.set(accountList[0])
-        selectBox = tk.OptionMenu(self, self.v, *accountList)
+        self.v.set("Select Option")
+        
+        selectBox = tk.OptionMenu(self, self.v, *controller.accountList)
         selectBox.config(justify=CENTER, width=60, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
         selectBox["menu"].config(font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
         selectBox.pack(side="top", pady=(100, 10))
@@ -252,14 +287,7 @@ class TransferPage(tk.Frame):
         transferAccTextbox = tk.Entry(self, justify=CENTER, width=20, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
         transferAccTextbox.insert(INSERT, "Recievers Username")
         transferAccTextbox.pack(side="right", padx=(0, 300), pady=(0, 100))
-
-        # usernameTextbox = tk.Entry(self, justify=CENTER, width=60, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846")
-        # usernameTextbox.insert(INSERT, "Username")
-        # usernameTextbox.pack(side="top", pady=(250,25))
-
-        # selection = tk.StringVar()
-        # selectBox = ttk.Combobox(self, text="Select Account", textvariable=selection, values = ["option 1", "option 2", "option 3"], justify=CENTER, width=60, font=("Times New Roman",24))
-        # selectBox.pack(side="top", pady="100")
+     
 
 class AccountDetails(tk.Frame):
 
