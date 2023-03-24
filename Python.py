@@ -58,7 +58,7 @@ class BankingController(tk.Tk):
     def show_frame(self, f):
         if (f == "HomePage"):
             self.populateTransferOption()
-            for F in (DepositPage, WithdrawPage, TransferPage, AccountDetails):
+            for F in (DepositPage, WithdrawPage, TransferPage, AccountDetails, AddAccount):
                 #Find frame name
                 page_name = F.__name__
 
@@ -215,16 +215,19 @@ class HomePage(tk.Frame):
         AccountButton.pack(side= "top",padx=(0,700),pady=(75,0))
 
         DepositButton = tk.Button(self, text="Deposit", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("DepositPage"))
-        DepositButton.pack(side= "top",padx=(0,700), pady=(100,0))
+        DepositButton.pack(side= "top",padx=(0,700), pady=(50,0))
 
         WithdrawButton = tk.Button(self, text="Withdraw", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("WithdrawPage"))
-        WithdrawButton.pack(side= "top",padx=(0,700), pady=(100,0))
+        WithdrawButton.pack(side= "top",padx=(0,700), pady=(50,0))
 
         TransferButton = tk.Button(self, text="Transfer", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("TransferPage"))
-        TransferButton.pack(side= "left",padx=(200,0), pady=(50,0))
+        TransferButton.pack(side= "top",padx=(0,700), pady=(50,0))
+        
+        TransferButton = tk.Button(self, text="New Account", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("AddAccount"))
+        TransferButton.pack(side= "left",padx=(205,0), pady=(0,35))
 
         backButton = tk.Button(self, text="Back", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
-        backButton.pack(side= "left",padx=(350,0), pady=(50,0))
+        backButton.pack(side= "right",padx=(0,50), pady=(50,0))
 
 class DepositPage(tk.Frame):
 
@@ -254,16 +257,12 @@ class WithdrawPage(tk.Frame):
         withdrawButton = tk.Button(self, text="Withdraw Amount", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
         withdrawButton.pack(side= "top", pady=(50,0))
 
-
-    
-
 class TransferPage(tk.Frame):
 
     def __init__(self, cont, controller):
         tk.Frame.__init__(self, cont, bg="white")
         titleLabel = tk.Label(self, text="Money Safe", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
         titleLabel.pack(side="top", fill="x")
-
 
         #accountList = ("option 1", "option 2", "option 3")
         self.v = tk.StringVar()
@@ -288,7 +287,6 @@ class TransferPage(tk.Frame):
         transferAccTextbox.insert(INSERT, "Recievers Username")
         transferAccTextbox.pack(side="right", padx=(0, 300), pady=(0, 100))
      
-
 class AccountDetails(tk.Frame):
 
     def __init__(self, cont, controller):
@@ -307,6 +305,26 @@ class AccountDetails(tk.Frame):
         titleLabel = tk.Label(self, text="ACCOUNT DETAILS", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
         titleLabel.pack(side="right", fill="y")
 
+class AddAccount(tk.Frame):
+
+    def __init__(self, cont, controller):
+        tk.Frame.__init__(self, cont, bg="white")
+        titleLabel = tk.Label(self, text="Money Safe", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        titleLabel.pack(side="top", fill="x")
+
+        OPTIONS=["Personal","Business"]
+        variable = StringVar(self)
+        variable.set(OPTIONS[0]) # default value
+
+        w = OptionMenu(self, variable, *OPTIONS)
+        w.config(justify=CENTER, width=40, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        w.pack(side ="top", pady=(50,0), padx=(15,0))
+
+        backBtn = tk.Button(self, text="Back", width=10, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        backBtn.pack(side="bottom", pady=(0,50), padx=(0, 1000))
+
+        transferBtn = tk.Button(self, text="Add Account", width=40, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        transferBtn.pack(side="bottom", pady=(0, 100))
 
 if __name__ == "__main__":
     app = BankingController()
