@@ -35,7 +35,7 @@ class BankingController(tk.Tk):
         #Empty dictionary to hold all frame and frame object pairings
         self.frames = {}
 
-        #Iterate through all frames
+        #Iterate through some frames
 
         for F in (LoginPage, CreateAnAccount, HomePage):
 
@@ -56,9 +56,15 @@ class BankingController(tk.Tk):
 
     #Function to change frame
     def show_frame(self, f):
+        #Check if the frame is the HomePage
         if (f == "HomePage"):
+            #Clear the accountList array if is already has something in it
             self.accountList = []
-            self.populateTransferOption()
+
+            #Run the function to populate the accountList array for use in other Frame
+            self.populateAccountList()
+
+            #Run through the Frames that include an optionMenu widget
             for F in (DepositPage, WithdrawPage, TransferPage, AccountDetails, AddAccount):
                 #Find frame name
                 page_name = F.__name__
@@ -71,9 +77,12 @@ class BankingController(tk.Tk):
 
                 #Stack all frames in the same position, the last stacked will appear at the top unless changed
                 frame.grid(row=0, column=0, sticky="nsew")
+
+        #Show the frequested Frame
         frameobj = self.frames[f]
         frameobj.tkraise()
-
+    
+    #Function to test if the text inside of an entry box is a number of decimal number
     def validateEntry(self, action, index, value_if_allowed,
                        prior_value, text, validation_type, trigger_type, widget_name):
         if text:            
@@ -84,16 +93,25 @@ class BankingController(tk.Tk):
                 return False
         else:
             return False
-
+    
+    #Check new account details
     def validInfo(self, userN, passwrd):
+        #Check if any of the input boxes are empty
         if(userN == "" or passwrd == ""):
             messagebox.showinfo(title="Error", message="Please fill all fields")
             return False
+
+        #Connect to database
         conn = sqlite3.connect("bankingAccounts.db")
         c = conn.cursor()
         c.execute("SELECT *,oid FROM bankingInfo")
+
+        #Fetch all query results
         records =c.fetchall()
+
+        #Iterate through all results
         for record in records:
+            #Check if the given username is already in the database, if so return error
             if (userN == str(record[0])):
                 conn.commit()
                 conn.close()
@@ -103,92 +121,124 @@ class BankingController(tk.Tk):
         conn.close()       
         return True
 
+    #Create an Account
     def dbCreateAccount (self, userN, passwrd, accType):
+        #Test the return state of the function
         if(self.validInfo(userN, passwrd)):
+            #Open the database
             conn = sqlite3.connect("bankingAccounts.db")
             c = conn.cursor()
+            #Include a new entry
             c.execute("INSERT INTO bankingInfo VALUES (:userN, :passwrd, :accType, :bal)",
                         {
                             'userN': userN,
                             'passwrd': passwrd,
                             'accType': accType,
-                            'bal':4                     
+                            'bal':4                   
                         })           
             conn.commit()
 
+            #Find the unique ID for the newly created account
             c.execute("SELECT *,oid FROM bankingInfo WHERE userName =?", (userN,))
             records =c.fetchall()
             record = records[0]
+
+            #Store details for later use
             self.uniqueID = record[4]
-            self.currentUserName = record[0]
-            print(self.currentUserName, self.uniqueID)
+            self.currentUserName = record[0]            
             conn.close()
+
             self.show_frame("HomePage")
 
+    #Check login credentials
     def loginCredentials(self, userN, passwrd):
+        #Open database
         conn = sqlite3.connect("bankingAccounts.db")
         c = conn.cursor()
+        #Search for matching username and password
         c.execute("SELECT *,oid FROM bankingInfo WHERE userName = ? AND password=? ", (userN, passwrd))
         records =c.fetchall()
-        
+        #If there are not matching the length will be 0
         if (len(records) == 0):
+            #Return error
             conn.close()
             return False
+
+        #Store the information for later use
         record = records[0]
         self.uniqueID = record[4]
         self.currentUserName = record[0]        
         conn.close()
         return True
-
+    #Login
     def dbLogin (self, userN, passwrd):
-        if(self.loginCredentials(userN, passwrd)):           
+        #Check return state
+        if(self.loginCredentials(userN, passwrd)):
+            #Move past login
             self.show_frame("HomePage")
 
-    def populateTransferOption (self):       
+    #Populate the account list 
+    def populateAccountList (self):
+        #Connect to DB
         conn = sqlite3.connect("bankingAccounts.db")
         c = conn.cursor()
+        #Find all accounts related to username
         c.execute("SELECT *,oid FROM bankingInfo WHERE userName = ?", (self.currentUserName,))
         records =c.fetchall()
+        #Create data arrays for each of the them and store inside of list
         for record in records:
             data = "%s, %s, %s, %s, %s" % (record[0], record[1],record[2],record[3],record[4])
             self.accountList.append(data)
         
-
+    #Transfer Function
     def transferMoney(self, userInfo, transferMoney, transferReceiver):
+        #Test if the user has selected a valid option
         try:
             userID = userInfo.split(",",4)[4] 
         except:
             return False
-        
+        #Connect to DB
         conn = sqlite3.connect("bankingAccounts.db")
         c = conn.cursor()
-        c.execute("SELECT *,oid FROM bankingInfo WHERE oid = ?", (userID,))
 
+        #Find information related to sender
+        c.execute("SELECT *,oid FROM bankingInfo WHERE oid = ?", (userID,))
         records =c.fetchall()
         record = records[0]
+
+        #Focus on the sender balance
         senderBal = record[3]
+
+        #Convert balance and amount requested to send to float
         senderBal = float(senderBal)
         transferMoney = float(transferMoney)
-        newSenderBal = senderBal - transferMoney
 
+        #Test if sender has available funds
         if (senderBal<transferMoney):
             return False
 
+        #Find information related to the receiver
         c.execute("SELECT *,oid FROM bankingInfo WHERE oid = ?", (transferReceiver,))
         records =c.fetchall()        
+        #Test if the receiver exists
         try:
             record = records[0]
             receiverBal = record[3]
         except:
             return False
+        #Conver receiver bal to float
         receiverBal = float(receiverBal)
+        #Find new balanced for both parties
         newReceiverBal = receiverBal + transferMoney
-        print("finalStep")
+        newSenderBal = senderBal - transferMoney
+        
+        #Update the table with new balances
         c.execute("UPDATE bankingInfo SET balance=? WHERE oid =?",(newSenderBal,userID))
         c.execute("UPDATE bankingInfo SET balance=? WHERE oid =?",(newReceiverBal, transferReceiver))
         conn.commit()
         conn.close()
 
+        #Move to home page
         self.show_frame("HomePage")
     
     def addAccount(self, variable):
@@ -260,7 +310,7 @@ class HomePage(tk.Frame):
         titleLabel = tk.Label(self, text="Money Safe", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
         titleLabel.pack(side="top", fill= "x")
 
-        AccountButton = tk.Button(self, text="Account", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("CreateAnAccount"))
+        AccountButton = tk.Button(self, text="Account", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("AccountDetails"))
         AccountButton.pack(side= "top",padx=(0,700),pady=(75,0))
 
         DepositButton = tk.Button(self, text="Deposit", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("DepositPage"))
@@ -337,20 +387,28 @@ class TransferPage(tk.Frame):
 class AccountDetails(tk.Frame):
 
     def __init__(self, cont, controller):
+        self.test = 0
         tk.Frame.__init__(self, cont, bg="white")
-        titleLabel = tk.Label(self, text="Money Safe", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
-        titleLabel.pack(side="top", fill="x")
+        self.titleLabel = tk.Label(self, text="Money Safe", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        self.titleLabel.pack(side="top", fill="x")
 
         accountList = ("option 1", "option 2", "option 3")
-        self.v = tk.StringVar()
-        self.v.set(accountList[0])
-        selectBox = tk.OptionMenu(self, self.v, *accountList)
+        v = tk.StringVar()
+        v.set(accountList[0])
+        selectBox = tk.OptionMenu(self, v, *accountList)
         selectBox.config(justify=CENTER, width=40, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
         selectBox["menu"].config(font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
         selectBox.pack(side="left", pady=(0, 500), padx=(50, 0))
 
         titleLabel = tk.Label(self, text="ACCOUNT DETAILS", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
         titleLabel.pack(side="right", fill="y")
+
+        controller.after(0, self.refresh(v))
+    def refresh(self, account):
+        self.titleLabel.configure(textvariable=account)
+        self.update()
+            
+        
 
 class AddAccount(tk.Frame):
 
