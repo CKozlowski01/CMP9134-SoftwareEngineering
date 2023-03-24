@@ -243,7 +243,6 @@ class BankingController(tk.Tk):
         self.showFrame("HomePage")
     
     def addAccount(self, variable):
-
         conn = sqlite3.connect("bankingAccounts.db")
         c = conn.cursor()
         c.execute("INSERT INTO bankingInfo VALUES (:userN, :passwrd, :accType, :bal)",
@@ -254,7 +253,37 @@ class BankingController(tk.Tk):
                         'bal':0                     
                     })           
         conn.commit()
- 
+
+    def depositMoney(self, userInfo, depositAmount):
+        #Test if the user has selected a valid option
+        try:
+            userID = userInfo.split(",",4)[4] 
+        except:
+            return False
+
+        #Connect to DB
+        conn = sqlite3.connect("bankingAccounts.db")
+        c = conn.cursor()
+
+        #Find information related to sender
+        c.execute("SELECT *,oid FROM bankingInfo WHERE oid = ?", (userID,))
+        records =c.fetchall()
+        record = records[0]
+
+        #Focus on the sender balance
+        senderBal = record[3]
+
+        #Convert balance and amount requested to send to float
+        senderBal = float(senderBal)
+        depositAmount = float(depositAmount)
+        newBalance = senderBal + depositAmount
+
+        #Update the table with new balances
+        c.execute("UPDATE bankingInfo SET balance=? WHERE oid =?",(newBalance,userID))
+        conn.commit()
+        conn.close()
+        self.showFrame("HomePage")
+
 class LoginPage(tk.Frame):
 
     def __init__(self, cont, controller):
@@ -348,7 +377,7 @@ class DepositPage(tk.Frame):
         depositTextbox = tk.Entry(self, justify=CENTER, width=60, font=("Times New Roman",24),
                                   borderwidth=3, relief="solid",bg="#016846", fg="white", validate="key", validatecommand=vcmd)    
         depositTextbox.pack(side="top", pady=(100,0))
-        depositButton = tk.Button(self, text="Deposit Amount", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.showFrame("CreateAnAccount"))
+        depositButton = tk.Button(self, text="Deposit Amount", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.depositMoney(variable.get(),depositTextbox.get()))
         depositButton.pack(side= "top", pady=(50,0))
 
 class WithdrawPage(tk.Frame):
