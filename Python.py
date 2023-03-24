@@ -15,7 +15,7 @@ class BankingController(tk.Tk):
 
         self.uniqueID = 0
         self.currentUserName=""
-        self.accountList = [""]
+        self.accountList = []
 
         conn = sqlite3.connect("bankingAccounts.db")
         c = conn.cursor()
@@ -111,7 +111,7 @@ class BankingController(tk.Tk):
                             'userN': userN,
                             'passwrd': passwrd,
                             'accType': accType,
-                            'bal':0                     
+                            'bal':4                     
                         })           
             conn.commit()
 
@@ -149,10 +149,44 @@ class BankingController(tk.Tk):
         c.execute("SELECT *,oid FROM bankingInfo WHERE userName = ?", (self.currentUserName,))
         records =c.fetchall()
         for record in records:
-            data = "%s %s %s %s %s" % (record[0], record[1],record[2],record[3],record[4])
+            data = "%s, %s, %s, %s, %s" % (record[0], record[1],record[2],record[3],record[4])
             self.accountList.append(data)
-            print("2")
-        print(self.accountList)
+        
+
+    def transferMoney(self, userInfo, transferMoney, transferReceiver):
+        try:
+            userID = userInfo.split(",",4)[4] 
+        except:
+            return False
+        
+        conn = sqlite3.connect("bankingAccounts.db")
+        c = conn.cursor()
+        c.execute("SELECT *,oid FROM bankingInfo WHERE oid = ?", (userID,))
+
+        records =c.fetchall()
+        record = records[0]
+        senderBal = record[3]
+        senderBal = float(senderBal)
+        transferMoney = float(transferMoney)
+        newSenderBal = senderBal - transferMoney
+
+        if (senderBal<transferMoney):
+            return False
+
+        c.execute("SELECT *,oid FROM bankingInfo WHERE oid = ?", (transferReceiver,))
+        records =c.fetchall()        
+        try:
+            record = records[0]
+            receiverBal = record[3]
+        except:
+            return False
+        receiverBal = float(receiverBal)
+        newReceiverBal = receiverBal + transferMoney
+        print("finalStep")
+        c.execute("UPDATE bankingInfo SET balance=? WHERE oid =?",(newSenderBal,userID))
+        c.execute("UPDATE bankingInfo SET balance=? WHERE oid =?",(newReceiverBal, transferReceiver))
+        conn.commit()
+        conn.close()
             
  
 class LoginPage(tk.Frame):
@@ -263,13 +297,10 @@ class TransferPage(tk.Frame):
         tk.Frame.__init__(self, cont, bg="white")
         titleLabel = tk.Label(self, text="Money Safe", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
         titleLabel.pack(side="top", fill="x")
-
-
-        #accountList = ("option 1", "option 2", "option 3")
-        self.v = tk.StringVar()
-        self.v.set("Select Option")
-        
-        selectBox = tk.OptionMenu(self, self.v, *controller.accountList)
+     
+        v = tk.StringVar()
+        v.set("Select Option")       
+        selectBox = tk.OptionMenu(self, v, *controller.accountList)
         selectBox.config(justify=CENTER, width=60, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
         selectBox["menu"].config(font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
         selectBox.pack(side="top", pady=(100, 10))
@@ -277,8 +308,7 @@ class TransferPage(tk.Frame):
         backBtn = tk.Button(self, text="Back", width=10, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
         backBtn.pack(side="bottom", pady=(0,50), padx=(0, 1000))
 
-        transferBtn = tk.Button(self, text="Transfer", width=40, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
-        transferBtn.pack(side="bottom", pady=(0, 100))
+        
 
         transferTextbox = tk.Entry(self, justify=CENTER, width=20, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
         transferTextbox.insert(INSERT, "Transfer Amount")
@@ -287,6 +317,9 @@ class TransferPage(tk.Frame):
         transferAccTextbox = tk.Entry(self, justify=CENTER, width=20, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
         transferAccTextbox.insert(INSERT, "Recievers Username")
         transferAccTextbox.pack(side="right", padx=(0, 300), pady=(0, 100))
+
+        transferBtn = tk.Button(self, text="Transfer", width=40, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.transferMoney(v.get(),transferTextbox.get(),transferAccTextbox.get()))
+        transferBtn.pack(side="bottom", pady=(0, 100))
      
 
 class AccountDetails(tk.Frame):
