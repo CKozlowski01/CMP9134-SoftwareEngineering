@@ -387,26 +387,55 @@ class TransferPage(tk.Frame):
 class AccountDetails(tk.Frame):
 
     def __init__(self, cont, controller):
+
+        testVariable = 200
+
         self.test = 0
         tk.Frame.__init__(self, cont, bg="white")
         self.titleLabel = tk.Label(self, text="Money Safe", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
         self.titleLabel.pack(side="top", fill="x")
 
-        accountList = ("option 1", "option 2", "option 3")
-        v = tk.StringVar()
-        v.set(accountList[0])
-        selectBox = tk.OptionMenu(self, v, *accountList)
-        selectBox.config(justify=CENTER, width=40, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
-        selectBox["menu"].config(font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
-        selectBox.pack(side="left", pady=(0, 500), padx=(50, 0))
+        backBtn = tk.Button(self, text="Back", width=10, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("HomePage"))
+        backBtn.pack(side="bottom", pady=(0,50), padx=(0, 1300))
 
-        titleLabel = tk.Label(self, text="ACCOUNT DETAILS", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
-        titleLabel.pack(side="right", fill="y")
+        #accountList = ("option 1", "option 2", "option 3")
+        self.v = tk.StringVar()
+        self.v.set(controller.accountList[0])
+        self.selectBox = tk.OptionMenu(self, self.v, *controller.accountList, command=self.refresh)
+        self.selectBox.config(justify=CENTER, width=40, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        self.selectBox["menu"].config(font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        self.selectBox.pack(side="left", pady=(0, 300), padx=(50, 0))
 
-        controller.after(0, self.refresh(v))
+        self.holderName = tk.Label(self, text="Holder Name", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white", width=20)
+        self.holderName.pack(side="top", pady=(100,0))
+
+        self.accountType = tk.Label(self, text="Account Type", height=1, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white", width=20)
+        self.accountType.pack(side="top", pady=(10,0))
+
+        self.accountBal = tk.Label(self, text="£ {}".format(testVariable), height=1, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", width=20)
+        self.accountBal.pack(side="right", pady=(0,0), padx=(0,0))
+
+        self.accountID = tk.Label(self, text="Account ID", height=1, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", width=20)
+        self.accountID.pack(side="left", pady=(0,0), padx=(0,0))
+
     def refresh(self, account):
-        self.titleLabel.configure(textvariable=account)
-        self.update()
+
+        print("TEST TEST TEST")
+        print(account)
+
+        test = account.split(",")
+        name = tk.StringVar()
+        name.set(test[0])
+        type = tk.StringVar()
+        type.set(test[2])
+        ID = tk.StringVar()
+        ID.set(test[4])
+        bal = tk.StringVar()
+        bal.set(test[3])
+        self.holderName.configure(textvariable=name)
+        self.accountType.configure(textvariable=type)
+        self.accountID.configure(textvariable=ID)
+        self.accountBal.configure(textvariable=bal)
             
         
 
