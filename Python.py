@@ -15,6 +15,7 @@ class BankingController(tk.Tk):
 
         self.uniqueID = 0
         self.currentUserName=""
+        self.currentPasswrd=""
         self.accountList = []
         self.OPTIONS=["Personal","Business"]
 
@@ -169,7 +170,8 @@ class BankingController(tk.Tk):
         #Store the information for later use
         record = records[0]
         self.uniqueID = record[4]
-        self.currentUserName = record[0]        
+        self.currentUserName = record[0]  
+        self.currentPasswrd = record[1]   
         conn.close()
         return True
     #Login
@@ -259,13 +261,16 @@ class BankingController(tk.Tk):
         #Move to home page
         self.showFrame("HomePage")
     
+    #function to add a new account to existsing user
     def addAccount(self, variable):
+        #connect to database
         conn = sqlite3.connect("bankingAccounts.db")
         c = conn.cursor()
+        #insert new entry based on currently logged in user and account type
         c.execute("INSERT INTO bankingInfo VALUES (:userN, :passwrd, :accType, :bal)",
                     {
                         'userN': self.currentUserName,
-                        'passwrd': "",
+                        'passwrd': self.currentPasswrd,
                         'accType': variable,
                         'bal':0                     
                     })           
@@ -303,25 +308,65 @@ class BankingController(tk.Tk):
         conn.close()
         self.showFrame("HomePage")
 
+    def withdrawMoney(self, userInfo, withdrawAmount):
+        #Test if the user has selected a valid option
+        try:
+            userID = userInfo.split(",",4)[4] 
+        except:
+            messagebox.showinfo(title="Error", message="Please Select An Account")
+            return False
+        
+        #Connect to DB
+        conn = sqlite3.connect("bankingAccounts.db")
+        c = conn.cursor()
+
+        #Find information related to sender
+        c.execute("SELECT *,oid FROM bankingInfo WHERE oid = ?", (userID,))
+        records = c.fetchall()
+        record = records[0]
+
+        #Focus on the sender balance
+        senderBal = record[3]
+
+        #Convert balance and amount requested to send to float
+        senderBal = float(senderBal)
+        withdrawAmount = float(withdrawAmount)
+        
+        if (senderBal<withdrawAmount):
+            messagebox.showinfo(title="Error", message="You do not have the available funds")
+            return False
+        
+        newBalance = senderBal - withdrawAmount
+
+        #Update the table with new balances
+        c.execute("UPDATE bankingInfo SET balance=? WHERE oid =?",(newBalance,userID))
+        conn.commit()
+        conn.close()
+        self.showFrame("HomePage")
+
+##################################################################################################
+#Each new frame of the banking application stored in their respective classes
+#Each class holds the design and layout of the frames including the button functionalities
+##################################################################################################
 class LoginPage(tk.Frame):
 
     def __init__(self, cont, controller):
         tk.Frame.__init__(self, cont, bg="white")
-        titleLabel = tk.Label(self, text="Money Safe", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846")
+        titleLabel = tk.Label(self, text="Money Safe", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
         titleLabel.pack(side="top", fill= "x")
 
-        usernameTextbox = tk.Entry(self, justify=CENTER, width=60, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846")
+        usernameTextbox = tk.Entry(self, justify=CENTER, width=60, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
         usernameTextbox.insert(INSERT, "Username")
         usernameTextbox.pack(side="top", pady=(250,25))
 
-        passwordTextbox = tk.Entry(self, justify=CENTER, width=60, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846")
+        passwordTextbox = tk.Entry(self, justify=CENTER, width=60, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
         passwordTextbox.insert(INSERT, "Password")
         passwordTextbox.pack(side="top")
 
-        createAnAccountButton = tk.Button(self, text="Create Account", width=20, font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846", command=lambda:controller.showFrame("CreateAnAccount"))
+        createAnAccountButton = tk.Button(self, text="Create Account", width=20, font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.showFrame("CreateAnAccount"))
         createAnAccountButton.pack(side= LEFT,padx= (500,0),pady=(10,350))
         
-        LoginButton = tk.Button(self, text="Login", width=20,font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846", command=lambda:controller.dbLogin(usernameTextbox.get(),passwordTextbox.get()))
+        LoginButton = tk.Button(self, text="Login", width=20,font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.dbLogin(usernameTextbox.get(),passwordTextbox.get()))
 
         LoginButton.pack(side = RIGHT,padx=(0,500),pady=(10,350))
         
@@ -388,7 +433,7 @@ class DepositPage(tk.Frame):
         titleLabel.pack(side="top", fill= "x")
 
         variable = tk.StringVar()
-        variable.set("Select Option")
+        variable.set("Select Account")
         
         selectBox = tk.OptionMenu(self, variable, *controller.accountList)
         selectBox.config(justify=CENTER, width=60, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
@@ -402,8 +447,8 @@ class DepositPage(tk.Frame):
         depositButton = tk.Button(self, text="Deposit Amount", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.depositMoney(variable.get(),depositTextbox.get()))
         depositButton.pack(side= "top", pady=(50,0))
 
-        backButton = tk.Button(self, text="Back", width=20, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.showFrame("HomePage"))
-        backButton.pack(side= "top",padx=(0,750), pady=(200,0))
+        backBtn = tk.Button(self, text="Back", width=10, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.showFrame("HomePage"))
+        backBtn.pack(side="bottom", pady=(0,50), padx=(0, 1000))
 
 class WithdrawPage(tk.Frame):
 
@@ -413,7 +458,7 @@ class WithdrawPage(tk.Frame):
         titleLabel.pack(side="top", fill= "x")
 
         variable = tk.StringVar()
-        variable.set("Select Option")
+        variable.set("Select Account")
         
         selectBox = tk.OptionMenu(self, variable, *controller.accountList)
         selectBox.config(justify=CENTER, width=60, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
@@ -424,11 +469,11 @@ class WithdrawPage(tk.Frame):
         withdrawTextbox = tk.Entry(self, justify=CENTER, width=60, font=("Times New Roman",24),
                                   borderwidth=3, relief="solid",bg="#016846", fg="white", validate="key", validatecommand=vcmd)    
         withdrawTextbox.pack(side="top", pady=(100,0))
-        withdrawButton = tk.Button(self, text="Withdraw Amount", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.showFrame("CreateAnAccount"))
+        withdrawButton = tk.Button(self, text="Withdraw Amount", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.withdrawMoney(variable.get(), withdrawTextbox.get()))
         withdrawButton.pack(side= "top", pady=(50,0))
 
-        backButton = tk.Button(self, text="Back", width=20, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.showFrame("HomePage"))
-        backButton.pack(side= "top",padx=(0,750), pady=(200,0))
+        backBtn = tk.Button(self, text="Back", width=10, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.showFrame("HomePage"))
+        backBtn.pack(side="bottom", pady=(0,50), padx=(0, 1000))
 
 class TransferPage(tk.Frame):
 
@@ -438,7 +483,7 @@ class TransferPage(tk.Frame):
         titleLabel.pack(side="top", fill="x")
      
         variable = tk.StringVar()
-        variable.set("Select Option") 
+        variable.set("Select Account") 
         
         selectBox = tk.OptionMenu(self, variable, *controller.accountList)
         selectBox.config(justify=CENTER, width=60, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
@@ -463,51 +508,48 @@ class AccountDetails(tk.Frame):
 
     def __init__(self, cont, controller):
 
-        testVariable = 200
-
         self.test = 0
         tk.Frame.__init__(self, cont, bg="white")
         self.titleLabel = tk.Label(self, text="Money Safe", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
         self.titleLabel.pack(side="top", fill="x")
 
-        backBtn = tk.Button(self, text="Back", width=10, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.show_frame("HomePage"))
-        backBtn.pack(side="bottom", pady=(0,50), padx=(0, 1300))
+        backBtn = tk.Button(self, text="Back", width=10, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.showFrame("HomePage"))
+        backBtn.pack(side="bottom", pady=(0,50), padx=(0, 1000))
 
-        #accountList = ("option 1", "option 2", "option 3")
         self.v = tk.StringVar()
         self.v.set(controller.accountList[0])
         self.selectBox = tk.OptionMenu(self, self.v, *controller.accountList, command=self.refresh)
-        self.selectBox.config(justify=CENTER, width=40, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
+        self.selectBox.config(justify=CENTER, width=20, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
         self.selectBox["menu"].config(font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white")
         self.selectBox.pack(side="left", pady=(0, 300), padx=(50, 0))
 
-        self.holderName = tk.Label(self, text="Holder Name", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white", width=20)
+        self.holderName = tk.Label(self, text="Account Name", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white", width=20)
         self.holderName.pack(side="top", pady=(100,0))
 
         self.accountType = tk.Label(self, text="Account Type", height=1, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white", width=20)
         self.accountType.pack(side="top", pady=(10,0))
 
-        self.accountBal = tk.Label(self, text="£ {}".format(testVariable), height=1, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", width=20)
+        self.accountBal = tk.Label(self, text="Account Balance", height=1, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", width=20)
         self.accountBal.pack(side="right", pady=(0,0), padx=(0,0))
 
         self.accountID = tk.Label(self, text="Account ID", height=1, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", width=20)
         self.accountID.pack(side="left", pady=(0,0), padx=(0,0))
 
-        controller.after(0, self.refresh(v))
+    #
     def refresh(self, account):
 
-        print("TEST TEST TEST")
-        print(account)
-
+        #split the account value to separate it into their own textvariables
         test = account.split(",")
+        #set each value to its own tk.StringVar
         name = tk.StringVar()
         name.set(test[0])
         type = tk.StringVar()
         type.set(test[2])
         ID = tk.StringVar()
-        ID.set(test[4])
+        ID.set("Account ID: {}".format(test[4]))
         bal = tk.StringVar()
-        bal.set(test[3])
+        bal.set("£ {}".format(test[3]))
+        #input each stringvar into the corresponding field
         self.holderName.configure(textvariable=name)
         self.accountType.configure(textvariable=type)
         self.accountID.configure(textvariable=ID)
@@ -521,7 +563,7 @@ class AddAccount(tk.Frame):
         tk.Frame.__init__(self, cont, bg="white")
         titleLabel = tk.Label(self, text="Money Safe", height=2, font=("Times New Roman",64),borderwidth=3, relief="solid",bg="#016846", fg="white")
         titleLabel.pack(side="top", fill="x")
-      
+
         variable = StringVar(self)
         variable.set(controller.OPTIONS[0])
 
