@@ -162,6 +162,7 @@ class BankingController(tk.Tk):
         #If there are not matching the length will be 0
         if (len(records) == 0):
             #Return error
+            messagebox.showinfo(title="Error", message="Unable To Find Account")
             conn.close()
             return False
 
@@ -197,7 +198,14 @@ class BankingController(tk.Tk):
         try:
             userID = userInfo.split(",",4)[4] 
         except:
+            messagebox.showinfo(title="Error", message="Please Select An Account")
             return False
+
+        #Test if the user and the receiver are not the same
+        if (float(userID) == float(transferReceiver)):
+            messagebox.showinfo(title="Error", message="Cant send Money to yourself")
+            return False
+
         #Connect to DB
         conn = sqlite3.connect("bankingAccounts.db")
         c = conn.cursor()
@@ -212,10 +220,17 @@ class BankingController(tk.Tk):
 
         #Convert balance and amount requested to send to float
         senderBal = float(senderBal)
-        transferMoney = float(transferMoney)
+
+        #Test if information entered is a float
+        try:
+            transferMoney = float(transferMoney)
+        except:
+            messagebox.showinfo(title="Error", message="Please input a number")
+            return False
 
         #Test if sender has available funds
         if (senderBal<transferMoney):
+            messagebox.showinfo(title="Error", message="You do not have the available funds")
             return False
 
         #Find information related to the receiver
@@ -226,7 +241,9 @@ class BankingController(tk.Tk):
             record = records[0]
             receiverBal = record[3]
         except:
+            messagebox.showinfo(title="Error", message="Could not find Receivers Account")
             return False
+
         #Conver receiver bal to float
         receiverBal = float(receiverBal)
         #Find new balanced for both parties
@@ -254,11 +271,13 @@ class BankingController(tk.Tk):
                     })           
         conn.commit()
 
+    #Function to Deposit Money
     def depositMoney(self, userInfo, depositAmount):
         #Test if the user has selected a valid option
         try:
             userID = userInfo.split(",",4)[4] 
         except:
+            messagebox.showinfo(title="Error", message="Please Select An Account")
             return False
 
         #Connect to DB
@@ -333,6 +352,9 @@ class CreateAnAccount(tk.Frame):
         createAnAccountButton = tk.Button(self, text="Create Account", width=20, font=("Times New Roman",16),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.dbCreateAccount(usernameTextbox.get(),passwordTextbox.get(),variable.get()))
         createAnAccountButton.pack(side= "top",pady=(15,0))
 
+        backButton = tk.Button(self, text="Back", width=20, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.showFrame("LoginPage"))
+        backButton.pack(side= "top",padx=(0,750), pady=(150,0))
+
 class HomePage(tk.Frame):
 
     def __init__(self, cont, controller):        
@@ -352,10 +374,10 @@ class HomePage(tk.Frame):
         TransferButton = tk.Button(self, text="Transfer", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.showFrame("TransferPage"))
         TransferButton.pack(side= "top",padx=(0,700), pady=(50,0))
         
-        TransferButton = tk.Button(self, text="New Account", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.showFrame("AddAccount"))
-        TransferButton.pack(side= "left",padx=(205,0), pady=(0,35))
+        newACCButton = tk.Button(self, text="New Account", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.showFrame("AddAccount"))
+        newACCButton.pack(side= "left",padx=(205,0), pady=(0,35))
 
-        backButton = tk.Button(self, text="Back", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.showFrame("CreateAnAccount"))
+        backButton = tk.Button(self, text="Back", width=20, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.showFrame("LoginPage"))
         backButton.pack(side= "right",padx=(0,50), pady=(50,0))
 
 class DepositPage(tk.Frame):
@@ -380,6 +402,9 @@ class DepositPage(tk.Frame):
         depositButton = tk.Button(self, text="Deposit Amount", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.depositMoney(variable.get(),depositTextbox.get()))
         depositButton.pack(side= "top", pady=(50,0))
 
+        backButton = tk.Button(self, text="Back", width=20, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.showFrame("HomePage"))
+        backButton.pack(side= "top",padx=(0,750), pady=(200,0))
+
 class WithdrawPage(tk.Frame):
 
     def __init__(self, cont, controller):        
@@ -401,6 +426,9 @@ class WithdrawPage(tk.Frame):
         withdrawTextbox.pack(side="top", pady=(100,0))
         withdrawButton = tk.Button(self, text="Withdraw Amount", width=20, font=("Times New Roman",32),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.showFrame("CreateAnAccount"))
         withdrawButton.pack(side= "top", pady=(50,0))
+
+        backButton = tk.Button(self, text="Back", width=20, font=("Times New Roman",24),borderwidth=3, relief="solid",bg="#016846", fg="white", command=lambda:controller.showFrame("HomePage"))
+        backButton.pack(side= "top",padx=(0,750), pady=(200,0))
 
 class TransferPage(tk.Frame):
 
