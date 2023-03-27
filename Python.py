@@ -84,7 +84,7 @@ class BankingController(tk.Tk):
         frameobj = self.frames[f]
         frameobj.tkraise()
     
-    #Function to test if the text inside of an entry box is a number of decimal number
+    #Function to test if the text inside of an entry box is a number or decimal number
     def validateEntry(self, action, index, value_if_allowed,
                        prior_value, text, validation_type, trigger_type, widget_name):
         if text:            
@@ -136,7 +136,7 @@ class BankingController(tk.Tk):
                             'userN': userN,
                             'passwrd': passwrd,
                             'accType': accType,
-                            'bal':4                   
+                            'bal':0                   
                         })           
             conn.commit()
 
@@ -147,7 +147,8 @@ class BankingController(tk.Tk):
 
             #Store details for later use
             self.uniqueID = record[4]
-            self.currentUserName = record[0]            
+            self.currentUserName = record[0]
+            self.currentPasswrd = record[1]
             conn.close()
 
             self.showFrame("HomePage")
@@ -174,6 +175,7 @@ class BankingController(tk.Tk):
         self.currentPasswrd = record[1]   
         conn.close()
         return True
+
     #Login
     def dbLogin (self, userN, passwrd):
         #Check return state
@@ -275,6 +277,7 @@ class BankingController(tk.Tk):
                         'bal':0                     
                     })           
         conn.commit()
+        conn.close()
 
     #Function to Deposit Money
     def depositMoney(self, userInfo, depositAmount):
@@ -539,19 +542,20 @@ class AccountDetails(tk.Frame):
     def refresh(self, account):
 
         #split the account value to separate it into their own textvariables
-        test = account.split(",")
+        info = account.split(",")
         #set each value to its own tk.StringVar
         name = tk.StringVar()
-        name.set(test[0])
-        type = tk.StringVar()
-        type.set(test[2])
-        ID = tk.StringVar()
-        ID.set("Account ID: {}".format(test[4]))
+        name.set(info[0])
+        accType = tk.StringVar()
+        accType.set(info[2])
         bal = tk.StringVar()
-        bal.set("£ {}".format(test[3]))
+        bal.set("£ {}".format(info[3]))
+        ID = tk.StringVar()
+        ID.set("Account ID: {}".format(info[4]))
+
         #input each stringvar into the corresponding field
         self.holderName.configure(textvariable=name)
-        self.accountType.configure(textvariable=type)
+        self.accountType.configure(textvariable=accType)
         self.accountID.configure(textvariable=ID)
         self.accountBal.configure(textvariable=bal)
             
